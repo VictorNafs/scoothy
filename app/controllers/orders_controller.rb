@@ -12,13 +12,50 @@ class OrdersController < StoreController
     authorize! :show, @order, cookies.signed[:guest_token]
   end
 
-  private
+  def populate
+    variant_ids = params[:variant_id]
+    quantities = params[:quantity].map(&:to_i)
 
-  def accurate_title
-    t('spree.order_number', number: @order.number)
+    order = current_order || Spree::Order.new(order_params)
+
+    variant_ids.each_with_index do |variant_id, index|
+      variant = Spree::Variant.find(variant_id)
+      quantity = quantities[index]
+      options = params[:options] || {}
+
+      line_item = order.contents.add(variant, quantity, options)
+    end
+
+    if order.save
+      respond_with(order) do |format|
+        format.html { redirect_to spree.cart_path(order) } # Modifié ici
+        format.js { render :populate }
+      end
+    else
+      flash[:error] = t('spree.unable_to_add_product')
+      respond_with(order) do |format|
+        format.html { redirect_to :back }
+        format.js { render :populate }
+      end
+    end
   end
+
+  private
 
   def store_guest_token
     cookies.permanent.signed[:guest_token] = params[:token] if params[:token]
+  end
+
+  def order_params
+    {
+      user_id: spree_current_user&.id,
+      store_id: current_store.id,
+      currency: current_currency,
+      guest_token: cookies.signed[:guest_token]
+    }
+  end
+
+  def current_currency
+    "USD" # Remplacez par la devise souhaitée
   end
 end

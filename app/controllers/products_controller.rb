@@ -3,6 +3,7 @@
 class ProductsController < StoreController
   before_action :load_product, only: :show
   before_action :load_taxon, only: :index
+  before_action :load_day_schedule_product, only: :day_schedule
 
   helper 'spree/products', 'spree/taxons', 'taxon_filters'
 
@@ -28,7 +29,23 @@ class ProductsController < StoreController
     @taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
   end
 
+  def day_schedule
+    @instances = Array.new(24, @product)
+  
+    if request.post?
+      add_selected_products_to_cart
+      redirect_to spree.cart_path
+    end
+  end
+  
   private
+  
+  def add_selected_products_to_cart
+    selected_products = params[:selected_products].select { |_, v| v.present? }
+    selected_products.each do |_index, variant_id|
+      current_order.contents.add(Spree::Variant.find(variant_id), 1)
+    end
+  end
 
   def accurate_title
     if @product
@@ -49,5 +66,13 @@ class ProductsController < StoreController
 
   def load_taxon
     @taxon = Spree::Taxon.find(params[:taxon]) if params[:taxon].present?
+  end
+
+  def load_day_schedule_product
+    @product = Spree::Product.find_by(slug: params[:id])
+    unless @product
+      flash[:error] = "Le produit demandé n'a pas été trouvé."
+      redirect_to root_path
+    end
   end
 end

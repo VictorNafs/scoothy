@@ -33,7 +33,7 @@
             <% calendar_rows.each do |weekdays| %>
               <% date = weekdays[i] %>
               <td class="<%= date&.today? ? 'bg-primary' : '' %>">
-                <%= link_to date&.day, date ? day_schedule_path(date) : '#', class: 'text-decoration-none text-dark' %>
+<%= link_to date, day_schedule_product_path(@product, date: date) %>
               </td>
             <% end %>
           </tr>

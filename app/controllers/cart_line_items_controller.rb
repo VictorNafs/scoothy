@@ -11,10 +11,11 @@ class CartLineItemsController < StoreController
   def create
     @order = current_order(create_order_if_necessary: true)
     authorize! :update, @order, cookies.signed[:guest_token]
-
-    variant  = Spree::Variant.find(params[:variant_id])
+  
+    product = Product.find(params[:product_id])
+    variant = product.master # Utilisez le master variant du produit
     quantity = params[:quantity].present? ? params[:quantity].to_i : 1
-
+  
     # 2,147,483,647 is crazy. See issue https://github.com/spree/spree/issues/2695.
     if !quantity.between?(1, 2_147_483_647)
       @order.errors.add(:base, t('spree.please_enter_reasonable_quantity'))
@@ -25,7 +26,7 @@ class CartLineItemsController < StoreController
         @order.errors.add(:base, error.record.errors.full_messages.join(", "))
       end
     end
-
+  
     respond_with(@order) do |format|
       format.html do
         if @order.errors.any?
@@ -38,7 +39,7 @@ class CartLineItemsController < StoreController
       end
     end
   end
-
+  
   private
 
   def store_guest_token

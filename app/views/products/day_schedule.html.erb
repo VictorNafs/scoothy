@@ -1,0 +1,25 @@
+<%= form_with url: orders_populate_path, method: :post, id: "add-selected-products-to-cart-form" do %>
+  <table>
+    <thead>
+      <tr>
+        <th>Heure</th>
+        <th>Produit</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @instances.each_with_index do |product_instance, index| %>
+        <tr>
+          <td><%= "#{index}:00" %></td>
+          <td><%= product_instance.name %></td>
+          <td>
+            <%= check_box_tag "variant_id[]", product_instance.master.id, false %>
+            <%= hidden_field_tag "quantity[]", 1 %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= submit_tag "Ajouter les produits sélectionnés au panier", type: "submit", id: "add-selected-products-to-cart" %>
+<% end %>
