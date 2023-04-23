@@ -1,4 +1,5 @@
 <%= form_with url: orders_populate_path, method: :post, id: "add-selected-products-to-cart-form" do %>
+  <%= hidden_field_tag :product_id, @product.id %>
   <table>
     <thead>
       <tr>

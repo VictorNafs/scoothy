@@ -15,20 +15,21 @@ class OrdersController < StoreController
   def populate
     variant_ids = params[:variant_id]
     quantities = params[:quantity].map(&:to_i)
-
+    product_id = params[:product_id]
+  
     order = current_order || Spree::Order.new(order_params)
-
+  
     variant_ids.each_with_index do |variant_id, index|
       variant = Spree::Variant.find(variant_id)
       quantity = quantities[index]
       options = params[:options] || {}
-
+  
       line_item = order.contents.add(variant, quantity, options)
     end
-
+  
     if order.save
       respond_with(order) do |format|
-        format.html { redirect_to spree.cart_path(order) } # Modifié ici
+        format.html { redirect_to product_path(product_id) } # Modifié ici
         format.js { render :populate }
       end
     else
@@ -39,6 +40,7 @@ class OrdersController < StoreController
       end
     end
   end
+  
 
   private
 
