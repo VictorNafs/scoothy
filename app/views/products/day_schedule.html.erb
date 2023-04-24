@@ -1,26 +1,31 @@
 <%= form_with url: orders_populate_path, method: :post, id: "add-selected-products-to-cart-form" do %>
   <%= hidden_field_tag :product_id, @product.id %>
-  <table>
-    <thead>
-      <tr>
-        <th>Heure</th>
-        <th>Produit</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @instances.each_with_index do |product_instance, index| %>
-        <tr>
-          <td><%= "#{index}:00" %></td>
-          <td><%= product_instance.name %></td>
-          <td>
-            <%= check_box_tag "variant_id[]", product_instance.master.id, false %>
-            <%= hidden_field_tag "quantity[]", 1 %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <%= submit_tag "Ajouter les produits sélectionnés au panier", type: "submit", id: "add-selected-products-to-cart" %>
+  <div class="container">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Heure</th>
+            <th>Produit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @instances.each_with_index do |product_instance, index| %>
+            <tr>
+              <td><%= "#{index}:00" %></td>
+              <td><%= product_instance.name %></td>
+              <td>
+                <%= check_box_tag "variant_id[]", product_instance.master.id, false %>
+                <%= hidden_field_tag "quantity[]", 1 %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-group">
+      <%= submit_tag "Ajouter les produits sélectionnés au panier", type: "submit", id: "add-selected-products-to-cart", class: "btn btn-primary" %>
+    </div>
+  </div>
 <% end %>
