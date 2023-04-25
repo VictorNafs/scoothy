@@ -30,7 +30,7 @@ class ProductsController < StoreController
   end
 
   def day_schedule
-    @instances = Array.new(24, @product)
+    @instances = @product.variants.where(reserved: false)
   
     if request.post?
       add_selected_products_to_cart
@@ -38,14 +38,18 @@ class ProductsController < StoreController
     end
   end
   
-  private
   
-  def add_selected_products_to_cart
-    selected_products = params[:selected_products].select { |_, v| v.present? }
-    selected_products.each do |_index, variant_id|
-      current_order.contents.add(Spree::Variant.find(variant_id), 1)
-    end
+  private
+
+def add_selected_products_to_cart
+  selected_products = params[:selected_products].select { |_, v| v.present? }
+  selected_products.each do |_index, variant_id|
+    variant = Spree::Variant.find(variant_id)
+    current_order.contents.add(variant, 1)
+    variant.update(reserved: true)
   end
+end
+
 
   def accurate_title
     if @product

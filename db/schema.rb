@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_103050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -487,6 +487,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
     t.boolean "promotionable", default: true
     t.string "meta_title"
     t.datetime "discontinue_on", precision: nil
+    t.string "product_number"
     t.index ["available_on"], name: "index_spree_products_on_available_on"
     t.index ["deleted_at"], name: "index_spree_products_on_deleted_at"
     t.index ["name"], name: "index_spree_products_on_name"
@@ -1197,6 +1198,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
     t.datetime "updated_at"
     t.datetime "created_at"
     t.bigint "shipping_category_id"
+    t.boolean "reserved", default: false
     t.index ["position"], name: "index_spree_variants_on_position"
     t.index ["product_id"], name: "index_spree_variants_on_product_id"
     t.index ["shipping_category_id"], name: "index_spree_variants_on_shipping_category_id"
