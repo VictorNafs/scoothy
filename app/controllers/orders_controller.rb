@@ -13,20 +13,22 @@ class OrdersController < StoreController
   end
 
   def populate
-    variant_ids = params[:selected_products].split(',').reject(&:blank?) # Modifié ici
+    variant_ids = params[:selected_products].split(',').reject(&:blank?)
     quantities = params[:quantities]&.map(&:to_i) || []
     product_id = params[:product_id]
-  
+
     order = current_order || Spree::Order.new(order_params)
-  
+
     variant_ids.each_with_index do |variant_id, index|
       variant = Spree::Variant.find(variant_id)
       quantity = quantities[index]
-      options = params[:options] || {}
-  
+      
+      # Ajoutez l'index de la ligne du produit comme une option personnalisée
+      options = { product_line_index: index }.merge(params[:options] || {})
+
       line_item = order.contents.add(variant, quantity, options)
     end
-  
+
     if order.save
       respond_with(order) do |format|
         format.html { redirect_to product_path(product_id) }

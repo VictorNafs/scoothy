@@ -1,0 +1,14 @@
+<tr class="line-item <%= line_item.variant.options_text %>" data-line-item-id="<%= line_item.id %>">
+  <td class="product-name">
+<%= link_to "#{line_item.product.name} (Numéro du produit: #{"%02d" % (line_item.options[:product_line_index] + 1)})", spree.product_path(line_item.product) %>
+    <br><%= line_item.variant.options_text %>
+    
+    <!-- Affichez l'index de la ligne du produit ici -->
+    <br>Numéro du produit: <%= line_item.options[:product_line_index] + 1 %>
+  </td>
+  <td class="price"><%= display_price(line_item.price) %></td>
+  <td class="qty">
+    <%= line_item.quantity %>
+  </td>
+  <td class="total"><%= display_price(line_item.amount) %></td>
+</tr>

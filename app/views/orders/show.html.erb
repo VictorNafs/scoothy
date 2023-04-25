@@ -15,6 +15,23 @@
     </legend>
 
     <%= render 'order_details', order: @order %>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= t('spree.item') %></th>
+          <th><%= t('spree.price') %></th>
+          <th><%= t('spree.qty') %></th>
+          <th><%= t('spree.total') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @order.line_items.each do |line_item| %>
+          <%= render 'line_item', line_item: line_item %>
+        <% end %>
+      </tbody>
+    </table>
+
   </fieldset>
 
   <div class="order-page__actions">
