@@ -28,9 +28,13 @@
         <% weeks.each do |week| %>
           <tr>
             <% week.each do |date| %>
-<td class="<%= date&.today? ? 'text-white' : '' %>">
+              <td class="<%= date&.today? ? 'text-white' : '' %>">
                 <% if date.present? && date.month == current_month.month %>
-                  <%= link_to date&.day, day_schedule_product_path(@product, date: date), class: "text-decoration-none" %>
+                  <% if date.today? || date.future? %>
+                    <%= link_to date&.day, day_schedule_product_path(@product, date: date), class: "text-decoration-none" %>
+                  <% else %>
+                    <%= date.day %>
+                  <% end %>
                 <% end %>
               </td>
             <% end %>

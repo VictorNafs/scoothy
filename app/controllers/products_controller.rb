@@ -38,18 +38,16 @@ class ProductsController < StoreController
     end
   end
   
-  
   private
 
-def add_selected_products_to_cart
-  selected_products = params[:selected_products].select { |_, v| v.present? }
-  selected_products.each do |_index, variant_id|
-    variant = Spree::Variant.find(variant_id)
-    current_order.contents.add(variant, 1)
-    variant.update(reserved: true)
+  def add_selected_products_to_cart
+    selected_products = params[:selected_products].select { |_, v| v.present? }
+    selected_products.each do |_index, variant_id|
+      variant = Spree::Variant.find(variant_id)
+      current_order.contents.add(variant, 1)
+      variant.update(reserved: true)
+    end
   end
-end
-
 
   def accurate_title
     if @product
@@ -79,4 +77,17 @@ end
       redirect_to root_path
     end
   end
+
+  def all_products_sold_out?(date)
+    product_ids_with_available_variants = Spree::Variant.where(reserved: false).where("date(created_at) = ?", date).pluck(:product_id).uniq
+    !product_ids_with_available_variants.include?(@product.id)
+  end
+  
+  def available_on_date?(date)
+    Spree::Variant.where(product_id: @product.id, reserved: false).where("date(created_at) = ?", date).exists?
+  end
+  helper_method :available_on_date?
+  
+
+  helper_method :all_products_sold_out?
 end

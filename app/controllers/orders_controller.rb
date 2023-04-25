@@ -13,8 +13,8 @@ class OrdersController < StoreController
   end
 
   def populate
-    variant_ids = params[:variant_id]
-    quantities = params[:quantity].map(&:to_i)
+    variant_ids = params[:selected_products].split(',').reject(&:blank?) # Modifié ici
+    quantities = params[:quantities]&.map(&:to_i) || []
     product_id = params[:product_id]
   
     order = current_order || Spree::Order.new(order_params)
@@ -29,7 +29,7 @@ class OrdersController < StoreController
   
     if order.save
       respond_with(order) do |format|
-        format.html { redirect_to product_path(product_id) } # Modifié ici
+        format.html { redirect_to product_path(product_id) }
         format.js { render :populate }
       end
     else

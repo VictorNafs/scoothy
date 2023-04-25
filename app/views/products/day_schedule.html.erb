@@ -16,8 +16,8 @@
               <td><%= "#{index}:00" %></td>
               <td><%= product_instance.name %></td>
               <td>
-                <%= check_box_tag "selected_products[]", product_instance.id, false %>
-                <%= hidden_field_tag "quantity[]", 1 %>
+<%= check_box_tag "selected_products", product_instance.id, false %>
+                <%= hidden_field_tag "quantities[]", 1 %>
               </td>
             </tr>
           <% end %>
