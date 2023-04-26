@@ -12,13 +12,19 @@
         </thead>
         <tbody>
           <% @instances.each_with_index do |product_instance, index| %>
+            <% purchased_product = PurchasedProduct.find_by(product_instance_id: product_instance.id, purchase_date: Date.current) %>
             <tr>
               <td><%= "#{index}:00" %></td>
-              <td><%= product_instance.name %></td>
-              <td>
-<%= check_box_tag "selected_products", product_instance.id, false %>
-                <%= hidden_field_tag "quantities[]", 1 %>
-              </td>
+              <% if purchased_product.nil? %>
+                <td><%= product_instance.name %></td>
+                <td>
+                  <%= check_box_tag "selected_products[]", product_instance.id, false %>
+                  <%= hidden_field_tag "quantities[]", 1 %>
+                </td>
+              <% else %>
+                <td></td>
+                <td></td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
