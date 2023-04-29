@@ -14,12 +14,18 @@
           <% @instances.each_with_index do |stock_item, index| %>
             <% stock_movement = stock_item.stock_movements.first %>
             <tr>
-              <td><%= "#{index}:00" %></td>
+              <% product_number = @stock_movements[stock_item.id]&.find_index(stock_movement) %>
+              <% if product_number.present? %>
+                <td><%= "#{index}:00" %> (Produit <%= product_number + 1 %>)</td>
+              <% else %>
+                <td><%= "#{index}:00" %></td>
+              <% end %>
               <% if stock_movement.reserved == false %>
                 <td><%= @product.name %></td>
                 <td>
                   <%= check_box_tag "selected_products[]", stock_item.variant_id, false %>
                   <%= hidden_field_tag "quantities[]", 1 %>
+                  <%= hidden_field_tag "product_number[]", product_number %>
                 </td>
               <% else %>
                 <td></td>

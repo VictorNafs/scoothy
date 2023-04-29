@@ -33,7 +33,10 @@ class ProductsController < StoreController
     @product = Spree::Product.find(params[:product_id])
     @selected_date = params[:selected_date] || Date.today
     @instances = @product.stock_items.joins(:stock_movements).where('spree_stock_movements.date = ?', @selected_date)
-    
+  
+    # Récupérez les stock_movements pour la date sélectionnée et groupés par leur stock_item_id
+    @stock_movements = Spree::StockMovement.where(date: @selected_date).group_by(&:stock_item_id)
+  
     if request.post?
       add_selected_products_to_cart
       redirect_to spree.cart_path
@@ -49,12 +52,21 @@ class ProductsController < StoreController
 
   def add_selected_products_to_cart
     selected_products = params[:selected_products].select { |_, v| v.present? }
-    selected_products.each do |_index, variant_id|
+    selected_products.each_with_index do |(_, variant_id), index|
       variant = Spree::Variant.find(variant_id)
-      current_order.contents.add(variant, 1)
-      variant.update(reserved: true)
+  
+      # Trouver le stock_movement correspondant au variant sélectionné et à la date
+      stock_movement = Spree::StockMovement.find_by(stock_item_id: variant.stock_items.first.id, date: @selected_date)
+  
+      # Ajouter le produit au panier avec le numéro du produit, la date et le créneau horaire
+      current_order.contents.add(variant, 1, product_number: index + 1, date: @selected_date, time_slot: stock_movement.time_slot)
+  
+      # Marquer le stock_movement comme réservé
+      stock_movement.update(reserved: true)
     end
   end
+  
+  
 
   def accurate_title
     if @product

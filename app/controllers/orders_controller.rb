@@ -18,13 +18,20 @@ class OrdersController < StoreController
     product_id = params[:product_id]
   
     order = current_order || Spree::Order.new(order_params)
-  
+    order.start! if order.new_record?
+      
     variant_ids.each_with_index do |variant_id, index|
       variant = Spree::Variant.find(variant_id)
       quantity = quantities[index]
   
       # Ajoutez l'index de la ligne du produit comme une option personnalisée
       options = { product_line_index: index }.merge(params[:options] || {})
+  
+      # Ajoutez les informations de réservation (date et créneau horaire) ici
+      date = params[:date] # Remplacez par le paramètre approprié
+      time_slot = params[:time_slot] # Remplacez par le paramètre approprié
+      options[:date] = date
+      options[:time_slot] = time_slot
   
       line_item = order.contents.add(variant, quantity, options)
   
@@ -45,6 +52,7 @@ class OrdersController < StoreController
       end
     end
   end
+  
   
   
   
