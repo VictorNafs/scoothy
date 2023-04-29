@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_25_204102) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_28_131243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -930,6 +930,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_204102) do
     t.datetime "updated_at", null: false
     t.string "originator_type"
     t.integer "originator_id"
+    t.date "date"
+    t.boolean "reserved", default: false
     t.index ["stock_item_id"], name: "index_spree_stock_movements_on_stock_item_id"
   end
 

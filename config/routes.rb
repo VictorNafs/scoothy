@@ -38,9 +38,11 @@ Rails.application.routes.draw do
 
   resources :products, only: [:index, :show] do
     member do
-      get 'day_schedule'
+      get 'day_schedule', to: 'products#day_schedule', as: 'day_schedule_product' # Retirez :product_id
     end
   end
+  
+  
 
   resources :cart_line_items, only: :create
 

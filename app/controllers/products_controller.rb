@@ -30,13 +30,20 @@ class ProductsController < StoreController
   end
 
   def day_schedule
-    @instances = @product.variants.where(reserved: false)
-  
+    @product = Spree::Product.find(params[:product_id])
+    @selected_date = params[:selected_date] || Date.today
+    @instances = @product.stock_items.joins(:stock_movements).where('spree_stock_movements.date = ?', @selected_date)
+    
     if request.post?
       add_selected_products_to_cart
       redirect_to spree.cart_path
     end
   end
+  
+  
+  
+  
+  
   
   private
 
