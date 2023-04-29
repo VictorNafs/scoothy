@@ -43,11 +43,6 @@ class ProductsController < StoreController
     end
   end
   
-  
-  
-  
-  
-  
   private
 
   def add_selected_products_to_cart
@@ -65,8 +60,6 @@ class ProductsController < StoreController
       stock_movement.update(reserved: true)
     end
   end
-  
-  
 
   def accurate_title
     if @product
@@ -97,6 +90,15 @@ class ProductsController < StoreController
     end
   end
 
+  def time_slot_reserved?(date, time_slot)
+    reserved_line_items = Spree::LineItem.where(date: date, time_slot: time_slot)
+
+    reserved_line_items.any? do |line_item|
+      line_item.product_id == @product.id
+    end
+  end
+  helper_method :time_slot_reserved?
+
   def all_products_sold_out?(date)
     product_ids_with_available_variants = Spree::Variant.where(reserved: false).where("date(created_at) = ?", date).pluck(:product_id).uniq
     !product_ids_with_available_variants.include?(@product.id)
@@ -107,6 +109,5 @@ class ProductsController < StoreController
   end
   helper_method :available_on_date?
   
-
   helper_method :all_products_sold_out?
 end

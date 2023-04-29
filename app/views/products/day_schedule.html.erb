@@ -20,16 +20,16 @@
               <% else %>
                 <td><%= "#{index}:00" %></td>
               <% end %>
-              <% if stock_movement.reserved == false %>
+              <% if time_slot_reserved?(@selected_date, stock_movement.time_slot) %>
+                <td></td>
+                <td></td>
+              <% else %>
                 <td><%= @product.name %></td>
                 <td>
                   <%= check_box_tag "selected_products[]", stock_item.variant_id, false %>
                   <%= hidden_field_tag "quantities[]", 1 %>
                   <%= hidden_field_tag "product_number[]", product_number %>
                 </td>
-              <% else %>
-                <td></td>
-                <td></td>
               <% end %>
             </tr>
           <% end %>
