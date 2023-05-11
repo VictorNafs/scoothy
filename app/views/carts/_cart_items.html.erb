@@ -17,12 +17,12 @@
     <h2 class="cart-items-header__title">Subtotal</h2>
   </div>
 
-  <%= render(
-    partial: 'carts/cart_item',
-    collection: order.line_items,
-    as: :line_item,
-    locals: { order_form: order_form }
-  ) %>
+  <% order.line_items.each_with_index do |line_item, line_item_counter| %>
+    <%= render(
+      partial: 'carts/cart_item',
+      locals: { line_item: line_item, order_form: order_form, line_item_counter: line_item_counter }
+    ) %>
+  <% end %>
 
   <% if is_order_empty %>
     <%= render 'carts/cart_adjustments' %>
