@@ -2,16 +2,18 @@
   <% current_month = current_month() %>
   <% date_range = current_month.beginning_of_month..current_month.end_of_month %>
 
+  <h3 class="text-center mb-3">Réservez</h3>
+
   <!-- Ajouter les boutons de navigation juste au-dessus du tableau du calendrier -->
   <div class="d-flex justify-content-between mb-3">
     <%= link_to 'Previous', prev_month_path, class: 'btn btn-secondary' %>
-    <h4 class="mb-0"><%= current_month.strftime("%B %Y") %></h4>
+    <h4 class="mb-0"><%= current_month.strftime("%B") %> <%= current_month.year %></h4>
     <%= link_to 'Next', next_month_path, class: 'btn btn-secondary' %>
   </div>
 
   <div class="table-responsive">
     <table class="table table-bordered custom-calendar mx-auto">
-      <thead>
+      <thead class="thead-light">
         <tr>
           <% shifted_day_names.each do |day| %>
             <th><%= day %></th>
@@ -19,21 +21,21 @@
         </tr>
       </thead>
       <tbody>
-        <% dates_by_week = dates_by_weekday(date_range) %>
-        <% calendar_rows = empty_weekdays_array %>
-
-        <% date_range.each do |date| %>
-          <% adjusted_wday = (date.wday - 1) % 7 %>
-          <% calendar_rows[adjusted_wday] << date %>
-        <% end %>
-
-        <% max_weeks = calendar_rows.map(&:size).max %>
-        <% max_weeks.times do |i| %>
+        <% first_day_of_month = current_month.beginning_of_month %>
+        <% padding_days = ((first_day_of_month.wday - 1) % 7) %>
+        <% padded_date_range = ([nil] * padding_days) + date_range.to_a %>
+        <% weeks = padded_date_range.in_groups_of(7) %>
+        <% weeks.each do |week| %>
           <tr>
-            <% calendar_rows.each do |weekdays| %>
-              <% date = weekdays[i] %>
-              <td class="<%= date&.today? ? 'bg-primary' : '' %>">
-                <%= link_to date&.day, date ? day_schedule_path(date) : '#', class: 'text-decoration-none text-dark' %>
+            <% week.each do |date| %>
+              <td class="<%= date&.today? ? 'text-white' : '' %>">
+                <% if date.present? && date.month == current_month.month %>
+                  <% if date.today? || date.future? %>
+                    <%= link_to date&.day, day_schedule_product_product_path(product_id: @product.id, selected_date: date), class: "text-decoration-none" %>
+                  <% else %>
+                    <%= date.day %>
+                  <% end %>
+                <% end %>
               </td>
             <% end %>
           </tr>
