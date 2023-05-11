@@ -29,7 +29,7 @@ class OrdersController < StoreController
   
     if order.save
       respond_with(order) do |format|
-        format.html { redirect_to product_path(product_id) } # Modifié ici
+        format.html { redirect_to spree.cart_path(order) }
         format.js { render :populate }
       end
     else

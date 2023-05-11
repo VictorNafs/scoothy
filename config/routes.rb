@@ -66,6 +66,8 @@ Rails.application.routes.draw do
   end
 
   post '/orders/populate', to: 'orders#populate', as: :orders_populate
+  post 'orders/populate', to: 'orders#populate', as: :populate_orders
+
 
     # route globbing for pretty nested taxon and product paths
     get '/t/*id', to: 'taxons#show', as: :nested_taxons
