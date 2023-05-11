@@ -1,0 +1,24 @@
+                                               Table "public.spree_line_items"
+        Column        |              Type              | Collation | Nullable |                   Default                    
+----------------------+--------------------------------+-----------+----------+----------------------------------------------
+ id                   | integer                        |           | not null | nextval('spree_line_items_id_seq'::regclass)
+ variant_id           | integer                        |           |          | 
+ order_id             | integer                        |           |          | 
+ quantity             | integer                        |           | not null | 
+ price                | numeric(10,2)                  |           | not null | 
+ created_at           | timestamp(6) without time zone |           |          | 
+ updated_at           | timestamp(6) without time zone |           |          | 
+ cost_price           | numeric(10,2)                  |           |          | 
+ tax_category_id      | integer                        |           |          | 
+ adjustment_total     | numeric(10,2)                  |           |          | 0.0
+ additional_tax_total | numeric(10,2)                  |           |          | 0.0
+ promo_total          | numeric(10,2)                  |           |          | 0.0
+ included_tax_total   | numeric(10,2)                  |           | not null | 0.0
+ product_number       | integer                        |           |          | 
+ date                 | timestamp(6) without time zone |           |          | 
+ time_slot            | integer                        |           |          | 
+Indexes:
+    "spree_line_items_pkey" PRIMARY KEY, btree (id)
+    "index_spree_line_items_on_order_id" btree (order_id)
+    "index_spree_line_items_on_variant_id" btree (variant_id)
+

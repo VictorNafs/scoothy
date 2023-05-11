@@ -12,12 +12,21 @@
       ) %>
     </div>
 
-    <%= render(
-      'orders/item_info',
-      line_item: line_item,
-      variant: variant,
-      classes: ['cart-item__info']
-    ) %>
+    <div class="cart-item__info">
+      <div class="cart-item-description">
+        <%= line_item.variant.product.name %>
+        <% if line_item.date.present? && line_item.time_slot.present? %>
+<span class="reservation-date-time" style="display: block;">(<%= line_item.date.strftime('%d/%m/%Y') %> de <%= line_item.time_slot %>:00h à <%= line_item.time_slot + 1 %>:00h)</span>
+        <% end %>
+        <%= line_item_description_text(line_item.description) %>
+      </div>
+      <%= render(
+        'orders/item_info',
+        line_item: line_item,
+        variant: variant,
+        classes: ['cart-item__details']
+      ) %>
+    </div>
 
     <div class="cart-item__price-single">
       <%= line_item.single_money.to_html %>

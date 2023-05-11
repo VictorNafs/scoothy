@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_29_163629) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -84,6 +84,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "paypal_funding_source"
+  end
+
+  create_table "purchased_products", force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "product_instance_id"
+    t.date "purchase_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "spree_addresses", id: :serial, force: :cascade do |t|
@@ -263,6 +271,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
     t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0"
     t.decimal "promo_total", precision: 10, scale: 2, default: "0.0"
     t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "product_number"
+    t.datetime "date"
+    t.integer "time_slot"
     t.index ["order_id"], name: "index_spree_line_items_on_order_id"
     t.index ["variant_id"], name: "index_spree_line_items_on_variant_id"
   end
@@ -921,6 +932,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
     t.datetime "updated_at", null: false
     t.string "originator_type"
     t.integer "originator_id"
+    t.date "date"
+    t.boolean "reserved", default: false
+    t.integer "time_slot"
     t.index ["stock_item_id"], name: "index_spree_stock_movements_on_stock_item_id"
   end
 
@@ -1197,6 +1211,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_095541) do
     t.datetime "updated_at"
     t.datetime "created_at"
     t.bigint "shipping_category_id"
+    t.boolean "reserved", default: false
     t.index ["position"], name: "index_spree_variants_on_position"
     t.index ["product_id"], name: "index_spree_variants_on_product_id"
     t.index ["shipping_category_id"], name: "index_spree_variants_on_shipping_category_id"

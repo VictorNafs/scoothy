@@ -7,11 +7,13 @@
   # Classes
   class_names = [base_class]
   class_names = class_names.join(" ")
+
+  line_item_index = local_assigns[:line_item_counter] ? local_assigns[:line_item_counter] + 1 : ""
 %>
 
 <div class="<%= class_names %>">
   <h2 class="<%= base_class %>__name">
-    <%= link_to line_item.name, product_path(variant.product) %>
+    <%= link_to "#{line_item.name} - Ligne #{line_item_index}", product_path(variant.product) %>
   </h2>
 
   <p class="<%= base_class %>__options">
